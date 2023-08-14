@@ -1,0 +1,31 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "Проект Mesto фронтенд + бэкенд",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elya-i/express-mesto-gha.git"
+  },
+  "author": "Elvira Izmaylova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Elya-i/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/Elya-i/express-mesto-gha#readme",
+  "dependencies": {
+    "express": "latest",
+    "mongoose": "^7.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.46.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.0",
+    "nodemon": "^3.0.1"
+  }
+}

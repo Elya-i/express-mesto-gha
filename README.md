@@ -14,3 +14,7 @@
 
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
+`npm lint` — запускает проверку линтером
+
+## Ссылка на репозиторий
+https://github.com/Elya-i/express-mesto-gha
