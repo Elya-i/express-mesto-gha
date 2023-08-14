@@ -1,3 +1,4 @@
+const { HTTP_STATUS_NOT_FOUND } = require('http2').constants;
 const express = require('express');
 const mongoose = require('mongoose');
 const cardRouter = require('./routes/cards');
@@ -31,6 +32,10 @@ app.use('/users', userRouter);
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello World');
+});
+
+app.use('*', (req, res) => {
+  res.status(HTTP_STATUS_NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
 });
 
 app.listen(PORT, () => {
