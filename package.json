@@ -20,7 +20,9 @@
   "homepage": "https://github.com/Elya-i/express-mesto-gha#readme",
   "dependencies": {
     "express": "latest",
-    "mongoose": "^7.4.2"
+    "helmet": "^7.0.0",
+    "mongoose": "^7.4.2",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "eslint": "^8.46.0",

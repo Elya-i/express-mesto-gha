@@ -1,6 +1,7 @@
 const { HTTP_STATUS_NOT_FOUND } = require('http2').constants;
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
 
@@ -26,6 +27,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(helmet());
 
 app.use('/cards', cardRouter);
 app.use('/users', userRouter);
