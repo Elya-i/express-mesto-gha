@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
@@ -6,22 +7,53 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: [2, 'Минимальная длина поля "name" - 2 символа'],
     maxlength: [30, 'Максимальная длина поля "name" - 30 символов'],
-    required: [true, 'Поле "name" должно быть заполнено'],
+    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     minlength: [2, 'Минимальная длина поля "about" - 2 символа'],
     maxlength: [30, 'Максимальная длина поля "about" - 30 символов'],
-    required: [true, 'Поле "about" должно быть заполнено'],
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: [true, 'Поле "avatar" должно быть заполнено'],
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (v) => validator.isURL(v),
       message: 'Incorrect URL',
     },
   },
-});
+  email: {
+    type: String,
+    unique: true,
+    required: [true, 'Поле "email" должно быть заполнено'],
+    validate: {
+      validator: (v) => validator.isEmail(v),
+      message: 'Incorrect email',
+    },
+  },
+  password: {
+    type: String,
+    required: [true, 'Поле "password" должно быть заполнено'],
+    minlength: [8, 'Минимальная длина поля "password" - 8 символов'],
+    select: false,
+  },
+}, { versionKey: false });
+
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            return Promise.reject(new Error('Неправильные почта или пароль'));
+          }
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);

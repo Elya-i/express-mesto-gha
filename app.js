@@ -2,8 +2,10 @@ const { HTTP_STATUS_NOT_FOUND } = require('http2').constants;
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
+const { login, createUser } = require('./controllers/users');
 
 const app = express();
 
@@ -19,6 +21,10 @@ mongoose.connect(DB_URL, {
 });
 
 app.use(express.json());
+app.use(cookieParser());
+
+app.post('/signup', createUser);
+app.post('/signin', login);
 
 app.use((req, res, next) => {
   req.user = {

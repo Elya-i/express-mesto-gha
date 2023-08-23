@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/Elya-i/express-mesto-gha#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "express": "latest",
     "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.2",
     "validator": "^13.11.0"
   },
