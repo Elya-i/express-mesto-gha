@@ -33,7 +33,7 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId, req.user._id)
     .then((card) => {
       if (card) return res.send({ data: card });
       return res.status(HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });

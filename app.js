@@ -1,11 +1,13 @@
-const { HTTP_STATUS_NOT_FOUND } = require('http2').constants;
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
-const { login, createUser } = require('./controllers/users');
+const { createUser, loginUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
+const NotFoundError = require('./utils/errors/NotFound');
+const errorHandler = require('./middlewares/error-handler');
 
 const app = express();
 
@@ -24,28 +26,21 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signin', loginUser);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64d61b6e3eb6c689f5919188',
-  };
-
-  next();
-});
+app.use(auth);
 
 app.use(helmet());
 
 app.use('/cards', cardRouter);
 app.use('/users', userRouter);
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello World');
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Запрашиваемая страница не найдена'));
 });
 
-app.use('*', (req, res) => {
-  res.status(HTTP_STATUS_NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
-});
+// app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
