@@ -1,13 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const cors = require('cors');
+const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
+
 const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
 const { createUser, loginUser } = require('./controllers/users');
+
 const auth = require('./middlewares/auth');
-const NotFoundError = require('./utils/errors/NotFound');
 const errorHandler = require('./middlewares/error-handler');
+const limiter = require('./middlewares/express-rate-limit');
+const NotFoundError = require('./utils/errors/NotFoundError');
+const { validateLoginUser, validateCreateUser } = require('./utils/validation/requestValidation');
 
 const app = express();
 
@@ -23,14 +29,18 @@ mongoose.connect(DB_URL, {
 });
 
 app.use(express.json());
-app.use(cookieParser());
 
-app.post('/signup', createUser);
-app.post('/signin', loginUser);
+app.post('/signup', validateCreateUser, createUser);
+app.post('/signin', validateLoginUser, loginUser);
 
 app.use(auth);
+app.use(limiter);
 
 app.use(helmet());
+app.use(cors());
+app.use(errors());
+
+app.use(cookieParser());
 
 app.use('/cards', cardRouter);
 app.use('/users', userRouter);

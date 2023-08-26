@@ -10,7 +10,7 @@ const User = require('../models/user');
 
 const { ValidationError, CastError } = mongoose.Error;
 
-const NotFoundError = require('../utils/errors/NotFound'); // 404
+const NotFoundError = require('../utils/errors/NotFoundError'); // 404
 const BadRequestError = require('../utils/errors/BadRequestError'); // 400
 const ConflictError = require('../utils/errors/ConflictError'); // 409
 
