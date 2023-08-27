@@ -22,13 +22,11 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new Error('NotValidId'))
+    .orFail((new NotFoundError('Пользователь по указанному _id не найден')))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof CastError) {
         next(new BadRequestError('Передан некорректный _id пользователя'));
-      } else if (err.message === 'NotValidId') {
-        next(new NotFoundError('Пользователь по указанному _id не найден'));
       } else {
         next(err);
       }
@@ -36,15 +34,12 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  const { userId } = req.params;
-  User.findById(userId)
-    .orFail(new Error('NotValidId'))
+  User.findById(req.params.userId)
+    .orFail((new NotFoundError('Пользователь по указанному _id не найден')))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof CastError) {
         next(new BadRequestError('Передан некорректный _id пользователя'));
-      } else if (err.message === 'NotValidId') {
-        next(new NotFoundError('Пользователь по указанному _id не найден'));
       } else {
         next(err);
       }
