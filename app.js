@@ -17,10 +17,7 @@ const { validateLoginUser, validateCreateUser } = require('./utils/validation/re
 
 const app = express();
 
-const {
-  PORT = 3000,
-  DB_URL = 'mongodb://localhost:27017/mestodb',
-} = process.env;
+const { PORT, DB_URL } = process.env;
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
@@ -28,19 +25,18 @@ mongoose.connect(DB_URL, {
   console.log('Connected to DB');
 });
 
+app.use(cors());
+app.use(limiter);
+app.use(helmet());
+
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLoginUser, loginUser);
 
 app.use(auth);
-app.use(limiter);
-
-app.use(helmet());
-app.use(cors());
-app.use(errors());
-
-app.use(cookieParser());
 
 app.use('/cards', cardRouter);
 app.use('/users', userRouter);
@@ -49,7 +45,7 @@ app.use('*', (req, res, next) => {
   next(new NotFoundError('Запрашиваемая страница не найдена'));
 });
 
-// app.use(errors());
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
