@@ -17,7 +17,10 @@ const { validateLoginUser, validateCreateUser } = require('./utils/validation/re
 
 const app = express();
 
-const { PORT, DB_URL } = process.env;
+const {
+  PORT = 3000,
+  DB_URL = 'mongodb://localhost:27017/mestodb',
+} = process.env;
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
